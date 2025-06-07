@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import auth from '@react-native-firebase/auth';
+// Importações atualizadas
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import auth from '../services/credenciaisFirebaseAuth'; // Nosso novo serviço
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -13,18 +15,17 @@ const RegisterScreen = ({ navigation }) => {
       return;
     }
 
-    auth()
-      .createUserWithEmailAndPassword(email, password)
+    // A sintaxe da função muda um pouco
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Atualiza o perfil do usuário com o nome
-        return userCredential.user.updateProfile({
+        // A função updateProfile também muda
+        updateProfile(userCredential.user, {
           displayName: name,
+        }).then(() => {
+           Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!', [
+            { text: 'OK', onPress: () => navigation.navigate('Login') },
+          ]);
         });
-      })
-      .then(() => {
-        Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!', [
-          { text: 'OK', onPress: () => navigation.navigate('Login') },
-        ]);
       })
       .catch(error => {
         let errorMessage = 'Ocorreu um erro ao cadastrar.';
@@ -40,6 +41,7 @@ const RegisterScreen = ({ navigation }) => {
       });
   };
 
+  // ... (o resto do código com a View e os Styles permanece o mesmo)
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Crie sua Conta</Text>
@@ -78,7 +80,6 @@ const RegisterScreen = ({ navigation }) => {
   );
 };
 
-// Estilos para a tela
 const styles = StyleSheet.create({
   container: {
     flex: 1,

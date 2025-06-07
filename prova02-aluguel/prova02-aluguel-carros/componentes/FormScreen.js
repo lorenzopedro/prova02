@@ -1,46 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import useFirebase from '../hooks/useFirebase'; // Importamos o seu hook
 
 const FormScreen = ({ navigation }) => {
+  // Usando o hook para ter acesso à função de adicionar dados
+  const { addUser, loading } = useFirebase();
+
+  // Criando estados para armazenar os dados de cada campo de texto
   const [carName, setCarName] = useState('');
   const [clientName, setClientName] = useState('');
   const [rentValue, setRentValue] = useState('');
   const [rentDate, setRentDate] = useState('');
 
-  const handleSaveRental = () => {
+  // Função chamada ao clicar no botão "Salvar Aluguel"
+  const handleSaveRental = async () => {
+    // 1. Validação simples para ver se os campos não estão vazios
     if (!carName.trim() || !clientName.trim() || !rentValue.trim() || !rentDate.trim()) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
 
-    firestore()
-      .collection('rentals') // O nome da sua coleção no Firestore
-      .add({
+    try {
+      // 2. Chama a função 'addUser' do seu hook, passando um objeto com os dados
+      // NOTA: Seu hook salva na coleção 'pessoa'. Se quiser, pode mudar para 'alugueis' dentro do hook.
+      await addUser({
         carName: carName,
         clientName: clientName,
-        rentValue: parseFloat(rentValue), // Salva como número
+        rentValue: parseFloat(rentValue), // Converte o valor para número
         rentDate: rentDate,
-        createdAt: firestore.FieldValue.serverTimestamp(), // Data de criação
-      })
-      .then(() => {
-        Alert.alert('Sucesso', 'Aluguel registrado com sucesso!');
-        // Limpa os campos após salvar
-        setCarName('');
-        setClientName('');
-        setRentValue('');
-        setRentDate('');
-      })
-      .catch((error) => {
-        console.error("Erro ao registrar aluguel: ", error);
-        Alert.alert('Erro', 'Não foi possível registrar o aluguel.');
       });
+
+      // 3. Mostra um alerta de sucesso e limpa os campos
+      Alert.alert('Sucesso', 'Aluguel registrado com sucesso!');
+      setCarName('');
+      setClientName('');
+      setRentValue('');
+      setRentDate('');
+    } catch (error) {
+      console.error("Erro ao registrar aluguel: ", error);
+      Alert.alert('Erro', 'Não foi possível registrar o aluguel.');
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Registrar Novo Aluguel</Text>
       
+      {/* Estes são os campos de input que faltavam */}
       <TextInput
         style={styles.input}
         placeholder="Nome do Carro"
@@ -74,10 +80,11 @@ const FormScreen = ({ navigation }) => {
         placeholderTextColor="#888"
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSaveRental}>
-        <Text style={styles.buttonText}>Salvar Aluguel</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSaveRental} disabled={loading}>
+        {/* Mostra um indicador de carregamento enquanto salva */}
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Salvar Aluguel</Text>}
       </TouchableOpacity>
-
+      
       <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('List')}>
         <Text style={styles.navButtonText}>Ver Aluguéis Registrados</Text>
       </TouchableOpacity>

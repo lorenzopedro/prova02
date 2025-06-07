@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import auth from '@react-native-firebase/auth';
+// Importações atualizadas
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import auth from '../services/credenciaisFirebaseAuth'; // Nosso novo serviço de auth
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -12,16 +14,16 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
-    auth()
-      .signInWithEmailAndPassword(email, password)
+    // A sintaxe da função de login também muda
+    signInWithEmailAndPassword(auth, email, password)
       .then(userCredential => {
         console.log('Usuário logado:', userCredential.user.email);
-        // Navega para a próxima tela após o login
+        // Usamos replace para o usuário não voltar para a tela de login
         navigation.replace('Form'); 
       })
       .catch(error => {
         let errorMessage = 'Ocorreu um erro ao fazer login.';
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
           errorMessage = 'E-mail ou senha inválidos.';
         } else if (error.code === 'auth/invalid-email') {
           errorMessage = 'O formato do e-mail é inválido.';
@@ -65,6 +67,7 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
+// ... (os styles permanecem os mesmos)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
