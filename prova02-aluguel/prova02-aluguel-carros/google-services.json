@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1019560013609",
+    "project_id": "prova02-aluguel-carros-1cef3",
+    "storage_bucket": "prova02-aluguel-carros-1cef3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019560013609:android:363d78964d404e90791138",
+        "android_client_info": {
+          "package_name": "com.lorenzo.prova02"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyidA5vYUyMGirA7GwUThY1h6g9L5Hu3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
