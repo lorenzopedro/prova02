@@ -139,6 +139,8 @@ import useFirebase from '../hooks/useFirebase';
 const ListScreen = ({ navigation, route }) => {
   // Pega os parâmetros passados pelo Dashboard para saber o que buscar
   const { collectionName, title } = route.params;
+
+  console.log('[ListScreen] Recebeu a coleção:', collectionName); 
   
   const { fetchData, loading } = useFirebase();
   const [items, setItems] = useState([]);
