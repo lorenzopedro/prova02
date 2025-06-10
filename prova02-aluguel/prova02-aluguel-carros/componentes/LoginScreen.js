@@ -19,7 +19,8 @@ const LoginScreen = ({ navigation }) => {
       .then(userCredential => {
         console.log('Usuário logado:', userCredential.user.email);
         // Usamos replace para o usuário não voltar para a tela de login
-        navigation.replace('Form'); 
+        //navigation.replace('Form'); 
+        navigation.replace('Dashboard');
       })
       .catch(error => {
         let errorMessage = 'Ocorreu um erro ao fazer login.';
