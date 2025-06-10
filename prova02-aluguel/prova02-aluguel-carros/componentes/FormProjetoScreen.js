@@ -32,8 +32,7 @@ const FormProjetoScreen = ({ navigation, route }) => {
       <Text style={styles.title}>Novo Projeto</Text>
       <TextInput style={styles.input} placeholder="Tema do Projeto" value={tema} onChangeText={setTema} />
       <TextInput style={styles.input} placeholder="Descrição" value={descricao} onChangeText={setDescricao} multiline />
-      <TouchableOpacity style={styles.button} /*onPress={handleSave}*/ onPress={() => Alert.alert("Teste", "O botão foi pressionado!")}
- disabled={loading}>
+      <TouchableOpacity style={styles.button} onPress={handleSave} disabled={loading}>
         {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Salvar</Text>}
       </TouchableOpacity>
     </View>
